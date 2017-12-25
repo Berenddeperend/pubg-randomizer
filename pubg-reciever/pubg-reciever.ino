@@ -14,10 +14,10 @@ Servo servoTop;
 
 int pos = 0;
 
-const int xLeft = 175;
-const int xRight = 40;
-const int yTop = 170;
-const int yBottom = 90;
+const int xLeft = 90;
+const int xRight = 160;
+const int yTop = 70;
+const int yBottom = 100;
 
 const int delayTime = 500;
 
@@ -27,30 +27,14 @@ void setup() {
   pinMode(9, OUTPUT);
   digitalWrite(9, HIGH);
 
-  slowRectangle(15, 0, 0);
-
+//  slowRectangle(15, 0, 0);
+  drawRectangle(HIGH);
 }
-
-//void loop() {
-//  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
-//    servoBottom.write(pos);
-//    servoTop.write(pos);
-////    digitalWrite(9, LOW);
-//    delay(15);
-//  }
-//  for (pos = 180; pos >= 0; pos -= 1) {
-//    servoBottom.write(pos);
-//    servoTop.write(pos);
-////    digitalWrite(9, HIGH);
-//    delay(15);
-//  }
-//}
 
 
 void loop(){
-  
-
-}
+  drawRectangle(HIGH);
+  }
 
 void drawRectangle(int laserStatus) {
   digitalWrite(9, laserStatus);
