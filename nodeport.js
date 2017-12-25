@@ -8,7 +8,7 @@ function moveFromTo(servoName, start, end, duration) {
     const sequence = createMovementSequence(start, end, duration);
 
     doWhileOverTime(function(i){
-        console.log(`${servoName} moves to ${sequence[i]}`);
+        console.log(`${servoName} moves to ${Math.round(sequence[i])}`);
     }, sequence.length, servoClock);
 }
 
@@ -19,8 +19,8 @@ moveFromTo('berend', 40, 50, 2000);
 */
 
 function createMovementSequence(start, end, duration) {
-    let sequence = [];
-    const stepNums = duration / servoClock;    
+    let sequence = [start];
+    const stepNums = Math.floor(duration / servoClock);
     const stepSize = (end - start) / stepNums;
     let currentVal = start;
     
