@@ -1,12 +1,27 @@
 // This is a scratchpad that I'm using so I can think about how the arduino should behave in a language I actually know
 const Rx = require('rxjs/Rx');
 
-const servoClock = 10;
+const servoClock = 15;
+
+
+function moveFromTo(servoName, start, end, duration) {
+    const sequence = createMovementSequence(start, end, duration);
+
+    doWhileOverTime(function(i){
+        console.log(`${servoName} moves to ${sequence[i]}`);
+    }, sequence.length, servoClock);
+}
+
+moveFromTo('berend', 40, 50, 2000);
+
+/*
+    helper functions
+*/
 
 function createMovementSequence(start, end, duration) {
     let sequence = [];
-    let stepNums = duration / servoClock;    
-    let stepSize = (end - start) / stepNums;
+    const stepNums = duration / servoClock;    
+    const stepSize = (end - start) / stepNums;
     let currentVal = start;
     
     for (let i = 0; i < stepNums ; i++) {
@@ -20,7 +35,7 @@ function createMovementSequence(start, end, duration) {
 function doWhileOverTime(fn, iterations, interval){
     let i = 0;
     
-    let timer = setInterval(function(){
+    const timer = setInterval(function(){
         fn(i);
         i ++;
         if (i == iterations) {
@@ -29,20 +44,7 @@ function doWhileOverTime(fn, iterations, interval){
     }, interval);
 }
 
-function moveFromTo(servoName, start, end, duration) {
-    let sequence = createMovementSequence(start, end, duration);
 
-    doWhileOverTime(function(i){
-        console.log(`${servoName} moves to ${sequence[i]}`);
-    }, sequence.length, servoClock);
-}
-
-moveFromTo('berend', 40, 2000, 8000);
-
-
-
-// todo: omschrijven naar rxjs stream
-// todo: omschrijven naar ES6 oplossing
-
+// todo: rewrite to rxjs
 // let berend = Rx.Observable.of(1,2,3);
 // berend.subscribe(x => console.log(x));
