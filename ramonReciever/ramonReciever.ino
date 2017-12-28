@@ -1,3 +1,9 @@
+/* 
+The reciever Ramon wrote. Need to port this to the main reciever project.
+*/
+
+
+
 /*Suitable for 433MHz Remote Kit and 315MHz Remote Kit by CATALEX Team*/
 //Store: http://www.aliexpress.com/store/1199788
 //      http://dx.com

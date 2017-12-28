@@ -12,7 +12,7 @@ function moveFromTo(servoName, start, end, duration) {
     }, sequence.length, servoClock);
 }
 
-moveFromTo('berend', 40, 50, 2000);
+moveFromTo('berend', 20, 140, 500);
 
 /*
     helper functions

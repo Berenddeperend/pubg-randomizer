@@ -1,10 +1,5 @@
-/* Sweep
- by BARRAGAN <http://barraganstudio.com>
- This example code is in the public domain.
-
- modified 8 Nov 2013
- by Scott Fitzgerald
- http://www.arduino.cc/en/Tutorial/Sweep
+/* 
+The main reciever for Dakpan's pugb project
 */
 
 #include <Servo.h>
@@ -75,7 +70,6 @@ void slowRectangle(int delayTime, int xStart, int yStart) {
       servoTop.write(pos);
       delay(delayTime);
     }
-
 
     //go to top right
     for(pos = xLeft; pos <= xRight; pos++) {
