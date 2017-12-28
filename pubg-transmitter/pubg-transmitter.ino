@@ -6,6 +6,16 @@ const int button1Pin = 2;
 const int button2Pin = 3;
 const int button3Pin = 4;
 
+
+//544 - 2400
+
+const int xMin = 544; //tweak these values
+const int xMax = 2400; //tweak these values
+const int yMin = 544; //tweak these values
+const int yMax = 2400; //tweak these values
+const int delayTime = 1000; //tweak these values
+
+
 int button1State;
 int button2State;
 int button3State;
@@ -87,7 +97,8 @@ void buttonStateLogger() {
       button1State = reading1;
 
       if (button1State == HIGH) {
-         transmitMessage("button1");
+        transmitMessage(buildPositionString(0, 0));
+        Serial.println(buildPositionString(0, 0));
       }
     }
   }
@@ -96,7 +107,8 @@ void buttonStateLogger() {
       button2State = reading2;
 
       if (button2State == HIGH) {
-         transmitMessage("button2");
+        transmitMessage(buildPositionString(50, 50));
+        Serial.println(buildPositionString(50, 50));
       }
     }
   }
@@ -105,7 +117,8 @@ void buttonStateLogger() {
       button3State = reading3;
 
       if (button3State == HIGH) {
-        transmitMessage("button3");
+        transmitMessage(buildPositionString(100, 100));
+        Serial.println(buildPositionString(100, 100));
       }
     }
   }
@@ -113,4 +126,11 @@ void buttonStateLogger() {
   lastButton1State = reading1;
   lastButton2State = reading2;
   lastButton3State = reading3;
+}
+
+String buildPositionString(int xPos, int yPos){
+  String mappedX = String(map(xPos, 0, 100, xMin, xMax));
+  String mappedY = String(map(yPos, 0, 100, yMin, yMax));
+
+  return String("x" + mappedX + "y" + mappedY);
 }

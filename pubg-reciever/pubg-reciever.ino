@@ -3,21 +3,19 @@
 #include <ServoTimer2.h>  // the servo library
 
 
+// default min is 544, max is 2400  
 
-ServoTimer2 servoBottom;
-ServoTimer2 servoTop;
+
+ServoTimer2 servoX;
+ServoTimer2 servoY;
 
 int pos = 0;
 
-const int xLeft = 90;
-const int xRight = 160;
-const int yTop = 70;
-const int yBottom = 100;
-
 const int delayTime = 1000;
 
-const int servoBottomPin = 3;
-const int servoTopPin = 5;
+const int servoXPin = 5;
+const int servoYPin = 3;
+const int laserPin = 9;
 const int RF_RX_PIN = 11;
 
 void setup() {
@@ -30,9 +28,9 @@ void setup() {
   vw_setup(2000); // Transmission speed in bits per second.
   vw_rx_start(); // Start the PLL receiver.
   
-  drawRectangle(HIGH);
-  drawRectangle(HIGH);
-  drawRectangle(HIGH);
+  // drawRectangle(HIGH);
+  // goToPoint(50, 50); //x, y, between 0 and 100. Works 0-0 is bottom-left, 100-100 is top-right
+ 
 }
 
 
@@ -53,48 +51,43 @@ void loop(){
     }
     Serial.print(comdata);
     Serial.println("");
+
+    goToPoint(parseDataX(comdata), parseDataY(comdata));
   }
 }
 
 void goToPoint(int xpos, int ypos) {
-
-}
-
-void drawRectangle(int laserStatus) {
-  digitalWrite(9, laserStatus);
   attachServos();
 
-
-  servoBottom.write(xLeft);
-  servoTop.write(yBottom);
-  
-  delay(delayTime);
-
-  servoBottom.write(xLeft);
-  servoTop.write(yTop);
+  servoX.write(xpos);
+  servoY.write(ypos);
 
   delay(delayTime);
-  
-  servoBottom.write(xRight);
-  servoTop.write(yTop);
-  
-  delay(delayTime);
-
-  servoBottom.write(xRight);
-  servoTop.write(yBottom);
-
-  delay(delayTime);
-
-  detachServos();
+  detachServos(); 
 }
 
-
 void attachServos() {
-  servoBottom.attach(servoBottomPin);
-  servoTop.attach(servoTopPin);
+  servoX.attach(servoXPin);
+  servoY.attach(servoYPin);
 }
 
 void detachServos() {
-  servoTop.detach();
-  servoBottom.detach();
+  servoY.detach();
+  servoX.detach();
+}
+
+
+// https://youtu.be/_P24em7Auq0?t=380
+int parseDataX(String data) {
+  Serial.println("Parsing X");
+  data.remove(data.indexOf("y"));
+  data.remove(data.indexOf("x"), 1);
+  return data.toInt();
+}
+
+int parseDataY(String data) {
+  Serial.println("Parsing Y");
+
+  data.remove(0, data.indexOf("y") + 1);
+  return data.toInt();
 }
