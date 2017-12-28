@@ -1,8 +1,6 @@
-/* 
-The main reciever for Dakpan's pugb project
-*/
-
+#include <VirtualWire.h>
 #include <Servo.h>
+
 
 Servo servoBottom;
 Servo servoTop;
@@ -14,25 +12,55 @@ const int xRight = 160;
 const int yTop = 70;
 const int yBottom = 100;
 
-const int delayTime = 500;
+const int delayTime = 1000;
+
+const int servoBottomPin = 3;
+const int servoTopPin = 5;
+const int RF_RX_PIN = 11;
 
 void setup() {
-  servoBottom.attach(3);
-  servoTop.attach(5);
   pinMode(9, OUTPUT);
   digitalWrite(9, HIGH);
 
-//  slowRectangle(15, 0, 0);
+  vw_set_rx_pin(RF_RX_PIN);  // Setup receive pin.
+  vw_setup(2000); // Transmission speed in bits per second.
+  vw_rx_start(); // Start the PLL receiver.
+  
+  drawRectangle(HIGH);
+  drawRectangle(HIGH);
   drawRectangle(HIGH);
 }
 
 
 void loop(){
-  drawRectangle(HIGH);
+  String comdata = "";
+  uint8_t buf[VW_MAX_MESSAGE_LEN];
+  uint8_t buflen = VW_MAX_MESSAGE_LEN;
+  if(vw_get_message(buf, &buflen)) { // non-blocking I/O
+  
+    int i;
+    // Message with a good checksum received, dump HEX
+    Serial.print("Got: ");
+   
+    for(i = 0; i < buflen; ++i) {
+      comdata += (char)buf[i];
+      //Serial.print(" ");
+	    //Serial.print(buf[i]);
+    }
+    Serial.print(comdata);
+    Serial.println("");
   }
+}
+
+void goToPoint(int xpos, int ypos) {
+
+}
 
 void drawRectangle(int laserStatus) {
   digitalWrite(9, laserStatus);
+  attachServos();
+
+
   servoBottom.write(xLeft);
   servoTop.write(yBottom);
   
@@ -52,34 +80,17 @@ void drawRectangle(int laserStatus) {
   servoTop.write(yBottom);
 
   delay(delayTime);
+
+  detachServos();
 }
 
-void slowRectangle(int delayTime, int xStart, int yStart) {
-    //start position
-    servoBottom.write(xStart);
-    servoTop.write(yStart);
-    delay(1000);
 
-    //go to top left
-    for(pos = xStart; pos <= xLeft; pos++) {
-      servoBottom.write(pos);
-      delay(delayTime);
-    }
-    //go to top left
-    for(pos = yStart; pos <= yTop; pos++) {
-      servoTop.write(pos);
-      delay(delayTime);
-    }
-
-    //go to top right
-    for(pos = xLeft; pos <= xRight; pos++) {
-      servoBottom.write(pos);
-      delay(delayTime);
-    }
-    //go to top right
-    for(pos = yTop; pos <= yTop; pos++) {
-      servoTop.write(pos);
-      delay(delayTime);
-    }
+void attachServos() {
+  servoBottom.attach(servoBottomPin);
+  servoTop.attach(servoTopPin);
 }
 
+void detachServos() {
+  servoTop.detach();
+  servoBottom.detach();
+}
