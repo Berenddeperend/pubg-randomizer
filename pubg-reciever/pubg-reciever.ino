@@ -1,9 +1,11 @@
 #include <VirtualWire.h>
-#include <Servo.h>
+// #include <Servo.h>
+#include <ServoTimer2.h>  // the servo library
 
 
-Servo servoBottom;
-Servo servoTop;
+
+ServoTimer2 servoBottom;
+ServoTimer2 servoTop;
 
 int pos = 0;
 
@@ -19,6 +21,8 @@ const int servoTopPin = 5;
 const int RF_RX_PIN = 11;
 
 void setup() {
+  Serial.begin(9600);
+
   pinMode(9, OUTPUT);
   digitalWrite(9, HIGH);
 
