@@ -133,9 +133,11 @@ void buttonStateLogger() {
       button1State = reading1;
 
       if (button1State == LOW) {
-        transmitMessage(buildPositionString(0, 0));
-        Serial.println("button1");
-        // Serial.println(buildPositionString(0, 0));
+        
+        // Serial.println(buildPositionString(redSpawns[1][0], redSpawns[1][1]));
+        Serial.print(redSpawns[1][0]);
+        Serial.print(", ");
+        Serial.println(redSpawns[1][1]);
       }
     }
   }
@@ -173,7 +175,9 @@ String buildPositionString(int xPos, int yPos){
   return String("x" + mappedX + "y" + mappedY);
 }
 
-
+// String pickPosition(int spawnsArray, int place) {
+//   return buildPositionString(spawnsArray[place][0], spawnsArray[place][1]);
+// }
 
 String pickRandomPosition(String color){
   int clock = millis();
