@@ -32,40 +32,41 @@ unsigned long debounceDelay = 10;
 unsigned long clock = 0; // use for RNG
 
 
-const int greenSpawns[] = {1, 2, 3, 4};
-const int greenSpawns[] = {ruins, pochinkiSchool, pochinkiFarm, myltaPrison, stalber, quarry};
-const int redSpawns[] = {zharki, shootingRange, severny, rozhok, mansion, lipovka, myltaPower, mylta, ferryPier, pirmorsk, novorepnoye, sosnovkaBaseMountain};
-const int blackSpawns[] = {georgopol, school, yasnayaPolyana, prison, pochinki, sosnovkaBase}
+const int greenSpawnsLength = 6;
+const int greenSpawns[6][2] = {
+  {40, 60}, //ruins
+  {50, 55}, //pochinkiSchool
+  {55, 45}, //pochinkiFarm
+  {85, 50}, //myltaPrison
+  {80, 80}, //stalber
+  {15, 15} //quarry
+}
 
-//greens
-const int ruins[] = {40, 60};
-const int pochinkiSchool[] = {50, 55};
-const int pochinkiFarm[] = {55, 45};
-const int myltaPrison[] = {85, 50};
-const int stalber[] = {80, 80};
-const int quarry[] = {15, 15};
+const int redSpawnsLength = 12;
+const int redSpawns[12][2] = {
+  {10, 90}, //zharki
+  {40, 85}, //shootingRange
+  {50, 90}, //severny
+  {50, 70}, //rozhok
+  {80, 50}, //mansion
+  {90, 45}, //lipovka
+  {95, 35}, //myltaPower
+  {80, 30}, //mylta
+  {20, 20}, //ferryPier
+  {10, 15}, //pirmorsk
+  {85, 15}, //novorepnoye
+  {70, 10}  //sosnovkaBaseMountain
+};
 
-//reds
-const int zharki = {10, 90};
-const int shootingRange = {40, 85};
-const int severny = {50, 90};
-const int rozhok = {50, 70};
-const int mansion = {80, 50};
-const int lipovka = {90, 45};
-const int myltaPower = {95, 35};
-const int mylta = {80, 30};
-const int ferryPier = {20, 20};
-const int pirmorsk = {10, 15};
-const int novorepnoye = {85, 15};
-const int sosnovkaBaseMountain = {70, 10};
-
-//blacks
-const int georgopol = {20, 80};
-const int school = {50, 55};
-const int yasnayaPolyana = {75, 75};
-const int prison = {80, 50};
-const int pochinki = {40, 50};
-const int sosnovkaBase = {50, 10};
+const int blackSpawnsLength = 6;
+const int blackSpawns[6][2] = {
+  {20, 80}, //georgopol
+  {50, 55}, //school
+  {75, 75}, //yasnayaPolyana
+  {80, 50}, //prison
+  {40, 50}, //pochinki
+  {50, 10} //sosnovkaBase
+};
 
 
 
@@ -78,6 +79,7 @@ void setup() {
   vw_set_tx_pin(RF_TX_PIN);
   vw_setup(2000); // Transmission speed in bits per second.
 
+  //play intro tune
   tone(piezoPin, notes[0]);
   delay(musicDelay);
   tone(piezoPin, notes[1]);
@@ -86,6 +88,9 @@ void setup() {
   delay(musicDelay);
   tone(piezoPin, notes[4]);
   noTone(piezoPin);
+
+  
+ 
 }
 
 unsigned char buffer[64]; // buffer array for data recieve over serial port
@@ -151,7 +156,8 @@ void buttonStateLogger() {
 
       if (button3State == LOW) {
         transmitMessage(generateRandomPosition());
-        Serial.println("button3");
+        // Serial.println(school[0]);
+        // Serial.println(school[1]);
         // Serial.println(generateRandomPosition());
       }
     }
@@ -172,7 +178,19 @@ String buildPositionString(int xPos, int yPos){
 String generateRandomPosition(){
   int clock = millis();
   randomSeed(clock);
+  
 
-  Serial.println(clock);
+
+  for(int i = 0; i < 11; i ++) {
+    Serial.print(redSpawns[i][0]);  
+    Serial.println(redSpawns[i][1]);  
+  }
+
+
+  
+
+
+
+  // Serial.println(random(5));
   return buildPositionString(random(0, 100), random(0, 100));
 }
