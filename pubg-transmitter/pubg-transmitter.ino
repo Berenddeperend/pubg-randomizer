@@ -2,37 +2,39 @@
 #include <VirtualWire.h>
 
 const int RF_TX_PIN = 12;
+const int piezoPin = 8;
 const int button1Pin = 2;
 const int button2Pin = 3;
 const int button3Pin = 4;
 
-
 //544 - 2400
-
-const int xMin = 544; //tweak these values
-const int xMax = 2400; //tweak these values
-const int yMin = 544; //tweak these values
-const int yMax = 2400; //tweak these values
+const int xMin = 1200; //tweak these values
+const int xMax = 1900; //tweak these values
+const int yMin = 1200; //tweak these values
+const int yMax = 2000; //tweak these values
 const int delayTime = 1000; //tweak these values
 
+const int notes[] = {262, 294, 330, 349};
+const int musicDelay = 80;
 
 int button1State;
 int button2State;
 int button3State;
-
 int lastButton1State = LOW;
 int lastButton2State = LOW;
 int lastButton3State = LOW;
-
 unsigned long lastDebounceTime1 = 0;
 unsigned long lastDebounceTime2 = 0;
 unsigned long lastDebounceTime3 = 0;
 
-
 unsigned long debounceDelay = 10;
+
+unsigned long clock = 0; // use for RNG
 
 
 void setup() {
+  clock = millis();
+
   Serial.begin(19200);
   Serial.setTimeout(10); //Michael says this fixes a one second delay. Sure, we'll leave it in.
   pinMode(button1Pin, INPUT);
@@ -40,6 +42,15 @@ void setup() {
   pinMode(button3Pin, INPUT);
   vw_set_tx_pin(RF_TX_PIN);
   vw_setup(2000); // Transmission speed in bits per second.
+
+  tone(piezoPin, notes[0]);
+  delay(musicDelay);
+  tone(piezoPin, notes[1]);
+  delay(musicDelay);
+  tone(piezoPin, notes[3]);
+  delay(musicDelay);
+  tone(piezoPin, notes[4]);
+  noTone(piezoPin);
 }
 
 unsigned char buffer[64]; // buffer array for data recieve over serial port
@@ -47,20 +58,6 @@ int count = 0;     // counter for buffer array
 
 void loop() {
   buttonStateLogger();
-
-  // if date is comming from softwareserial port ==> data is comming from gprs shield
-  // if (Serial.available()) {
-  //   Serial.println("dit is waar");
-
-  //   while (Serial.available()) {
-  //     buffer[count++] = Serial.read();
-  //     if(count == 64) break;
-  //   }
-
-  //   vw_send(buffer, count);
-  //   clearBufferArray();
-  //   count = 0;
-  // }    
 }
 
 void clearBufferArray() {
@@ -68,7 +65,6 @@ void clearBufferArray() {
     buffer[i] = NULL;
   }
 }
-
 
 void transmitMessage(String(input)) {
   const char *msg = input.c_str(); //convert input string to char array
@@ -117,8 +113,8 @@ void buttonStateLogger() {
       button3State = reading3;
 
       if (button3State == HIGH) {
-        transmitMessage(buildPositionString(100, 100));
-        Serial.println(buildPositionString(100, 100));
+        transmitMessage(generateRandomPosition());
+        Serial.println(generateRandomPosition());
       }
     }
   }
@@ -133,4 +129,10 @@ String buildPositionString(int xPos, int yPos){
   String mappedY = String(map(yPos, 0, 100, yMin, yMax));
 
   return String("x" + mappedX + "y" + mappedY);
+}
+
+String generateRandomPosition(){
+  randomSeed(clock);
+  Serial.println(clock);
+  return buildPositionString(random(0, 100), random(0, 100));
 }
