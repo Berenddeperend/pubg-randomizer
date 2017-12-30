@@ -40,7 +40,7 @@ const int greenSpawns[6][2] = {
   {85, 50}, //myltaPrison
   {80, 80}, //stalber
   {15, 15} //quarry
-}
+};
 
 const int redSpawnsLength = 12;
 const int redSpawns[12][2] = {
@@ -155,10 +155,8 @@ void buttonStateLogger() {
       button3State = reading3;
 
       if (button3State == LOW) {
-        transmitMessage(generateRandomPosition());
-        // Serial.println(school[0]);
-        // Serial.println(school[1]);
-        // Serial.println(generateRandomPosition());
+        transmitMessage(pickRandomPosition("black"));
+        Serial.println(pickRandomPosition("black"));
       }
     }
   }
@@ -175,22 +173,26 @@ String buildPositionString(int xPos, int yPos){
   return String("x" + mappedX + "y" + mappedY);
 }
 
-String generateRandomPosition(){
+
+
+String pickRandomPosition(String color){
   int clock = millis();
   randomSeed(clock);
-  
 
-
-  for(int i = 0; i < 11; i ++) {
-    Serial.print(redSpawns[i][0]);  
-    Serial.println(redSpawns[i][1]);  
+  if(color == "green") {      
+    int placeIndex = random(greenSpawnsLength);
+    return buildPositionString(greenSpawns[placeIndex][0], greenSpawns[placeIndex][1]);
   }
 
-
+  if(color == "red") {      
+    int placeIndex = random(redSpawnsLength);
+    return buildPositionString(redSpawns[placeIndex][0], redSpawns[placeIndex][1]);
+  }
   
+  if(color == "black") {      
+    int placeIndex = random(blackSpawnsLength);
+    return buildPositionString(blackSpawns[placeIndex][0], blackSpawns[placeIndex][1]);
+  }
 
-
-
-  // Serial.println(random(5));
-  return buildPositionString(random(0, 100), random(0, 100));
+  // return buildPositionString(random(0, 100), random(0, 100));
 }
