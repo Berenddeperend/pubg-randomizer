@@ -3,9 +3,9 @@
 
 const int RF_TX_PIN = 12;
 const int piezoPin = 8;
-const int button1Pin = 2;
-const int button2Pin = 3;
-const int button3Pin = 4;
+const int button1Pin = 4;
+const int button2Pin = 2;
+const int button3Pin = 3;
 
 //544 - 2400
 const int xMin = 1200; //tweak these values
@@ -20,9 +20,9 @@ const int musicDelay = 80;
 int button1State;
 int button2State;
 int button3State;
-int lastButton1State = LOW;
-int lastButton2State = LOW;
-int lastButton3State = LOW;
+int lastButton1State = HIGH;
+int lastButton2State = HIGH;
+int lastButton3State = HIGH;
 unsigned long lastDebounceTime1 = 0;
 unsigned long lastDebounceTime2 = 0;
 unsigned long lastDebounceTime3 = 0;
@@ -32,9 +32,44 @@ unsigned long debounceDelay = 10;
 unsigned long clock = 0; // use for RNG
 
 
-void setup() {
-  clock = millis();
+const int greenSpawns[] = {1, 2, 3, 4};
+const int greenSpawns[] = {ruins, pochinkiSchool, pochinkiFarm, myltaPrison, stalber, quarry};
+const int redSpawns[] = {zharki, shootingRange, severny, rozhok, mansion, lipovka, myltaPower, mylta, ferryPier, pirmorsk, novorepnoye, sosnovkaBaseMountain};
+const int blackSpawns[] = {georgopol, school, yasnayaPolyana, prison, pochinki, sosnovkaBase}
 
+//greens
+const int ruins[] = {40, 60};
+const int pochinkiSchool[] = {50, 55};
+const int pochinkiFarm[] = {55, 45};
+const int myltaPrison[] = {85, 50};
+const int stalber[] = {80, 80};
+const int quarry[] = {15, 15};
+
+//reds
+const int zharki = {10, 90};
+const int shootingRange = {40, 85};
+const int severny = {50, 90};
+const int rozhok = {50, 70};
+const int mansion = {80, 50};
+const int lipovka = {90, 45};
+const int myltaPower = {95, 35};
+const int mylta = {80, 30};
+const int ferryPier = {20, 20};
+const int pirmorsk = {10, 15};
+const int novorepnoye = {85, 15};
+const int sosnovkaBaseMountain = {70, 10};
+
+//blacks
+const int georgopol = {20, 80};
+const int school = {50, 55};
+const int yasnayaPolyana = {75, 75};
+const int prison = {80, 50};
+const int pochinki = {40, 50};
+const int sosnovkaBase = {50, 10};
+
+
+
+void setup() {
   Serial.begin(19200);
   Serial.setTimeout(10); //Michael says this fixes a one second delay. Sure, we'll leave it in.
   pinMode(button1Pin, INPUT);
@@ -92,9 +127,10 @@ void buttonStateLogger() {
     if (reading1 != button1State) {
       button1State = reading1;
 
-      if (button1State == HIGH) {
+      if (button1State == LOW) {
         transmitMessage(buildPositionString(0, 0));
-        Serial.println(buildPositionString(0, 0));
+        Serial.println("button1");
+        // Serial.println(buildPositionString(0, 0));
       }
     }
   }
@@ -102,9 +138,10 @@ void buttonStateLogger() {
     if (reading2 != button2State) {
       button2State = reading2;
 
-      if (button2State == HIGH) {
+      if (button2State == LOW) {
         transmitMessage(buildPositionString(50, 50));
-        Serial.println(buildPositionString(50, 50));
+        Serial.println("button2");
+        // Serial.println(buildPositionString(50, 50));
       }
     }
   }
@@ -112,9 +149,10 @@ void buttonStateLogger() {
     if (reading3 != button3State) {
       button3State = reading3;
 
-      if (button3State == HIGH) {
+      if (button3State == LOW) {
         transmitMessage(generateRandomPosition());
-        Serial.println(generateRandomPosition());
+        Serial.println("button3");
+        // Serial.println(generateRandomPosition());
       }
     }
   }
@@ -132,7 +170,9 @@ String buildPositionString(int xPos, int yPos){
 }
 
 String generateRandomPosition(){
+  int clock = millis();
   randomSeed(clock);
+
   Serial.println(clock);
   return buildPositionString(random(0, 100), random(0, 100));
 }
