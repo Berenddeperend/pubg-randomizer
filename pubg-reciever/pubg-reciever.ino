@@ -1,10 +1,5 @@
 #include <VirtualWire.h>
-// #include <Servo.h>
-#include <ServoTimer2.h>  // the servo library
-
-
-// default min is 544, max is 2400  
-
+#include <ServoTimer2.h>  // the servo library. Used instead of the usual one because of a conflict with VirtualWire.
 
 ServoTimer2 servoX;
 ServoTimer2 servoY;
@@ -32,10 +27,7 @@ void setup() {
   vw_rx_start(); // Start the PLL receiver.
   
   drawRectangle();
-  // goToPoint(50, 50); //x, y, between 0 and 100. Works 0-0 is bottom-left, 100-100 is top-right
- 
 }
-
 
 void loop(){
   String comdata = "";
@@ -43,29 +35,20 @@ void loop(){
   uint8_t buflen = VW_MAX_MESSAGE_LEN;
   if(vw_get_message(buf, &buflen)) {
     int i;
-    // Serial.print("Got: ");
 
     for(i = 0; i < buflen; ++i) {
       comdata += (char)buf[i];
     }
-    // Serial.print(comdata);
-    // Serial.println("");
-
     goToPoint(parseDataX(comdata), parseDataY(comdata));
   }
 }
 
 void goToPoint(int xpos, int ypos) {
-
   drawRectangle();
-
   attachServos();
   digitalWrite(laserPin, HIGH);
-
-
   servoX.write(xpos);
   servoY.write(ypos);
-
   delay(delayTime);
   detachServos(); 
 }
@@ -80,52 +63,42 @@ void detachServos() {
   servoX.detach();
 }
 
-
 // https://youtu.be/_P24em7Auq0?t=380
 int parseDataX(String data) {
-  // Serial.println("Parsing X");
   data.remove(data.indexOf("y"));
   data.remove(data.indexOf("x"), 1);
   return data.toInt();
 }
 
 int parseDataY(String data) {
-  // Serial.println("Parsing Y");
   data.remove(0, data.indexOf("y") + 1);
   return data.toInt();
 }
 
 void drawRectangle() {
-  digitalWrite(laserPin, HIGH);
-  attachServos();
-
   int rectangleDelay = 200;
 
+  digitalWrite(laserPin, HIGH);
+  attachServos();
   //topleft
   servoX.write(map(25, 0, 100, xMin, xMax));
   servoY.write(map(75, 0, 100, xMin, xMax));
   delay(rectangleDelay);
-
   //topright
   servoX.write(map(75, 0, 100, xMin, xMax));
   servoY.write(map(75, 0, 100, xMin, xMax));
   delay(rectangleDelay);
-
   //bottomright
   servoX.write(map(75, 0, 100, xMin, xMax));
   servoY.write(map(25, 0, 100, xMin, xMax));
   delay(rectangleDelay);
-
   //bottomleft
   servoX.write(map(25, 0, 100, xMin, xMax));
   servoY.write(map(25, 0, 100, xMin, xMax));
   delay(rectangleDelay);
-
   flickerLaser(8);
-
   detachServos();
   digitalWrite(laserPin, LOW);
-
 }
 
 void flickerLaser(int times) {

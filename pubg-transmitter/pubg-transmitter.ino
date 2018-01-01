@@ -8,10 +8,10 @@ const int button2Pin = 2;
 const int button3Pin = 3;
 
 //544 - 2400
-const int xMin = 2400; //tweak these values, done
-const int xMax = 544; //tweak these values
-const int yMin = 2400; //tweak these values, done
-const int yMax = 544; //tweak these values
+const int xMin = 2400;
+const int xMax = 544;
+const int yMin = 2400;
+const int yMax = 544;
 
 const int notes[] = {262, 294, 330, 349};
 const int musicDelay = 80;
@@ -30,7 +30,6 @@ unsigned long debounceDelay = 10;
 
 unsigned long clock = 0; // use for RNG
 
-
 const int greenSpawnsLength = 6;
 const int greenSpawns[6][2] = {
   {60, 48}, //ruins             //done
@@ -44,14 +43,14 @@ const int greenSpawns[6][2] = {
 const int redSpawnsLength = 12;
 const int redSpawns[12][2] = {
   {80, 22}, //zharki          //done
-  {60, 33}, //shootingRange   //DONE
+  {60, 33}, //shootingRange   //done
   {50, 26}, //severny         //done
   {51 ,46}, //rozhok          //done
   {17, 38}, //mansion         //done
   {10, 35}, //lipovka         //done
   {10, 40}, //myltaPower      //done
   {19, 49}, //mylta           //done
-  {75, 56}, //ferryPier       //DONE
+  {75, 56}, //ferryPier       //done
   {82, 53}, //pirmorsk        //done
   {18, 53}, //novorepnoye     //done
   {26, 56}  //sosnovkaBaseMountain //done
@@ -66,8 +65,6 @@ const int blackSpawns[6][2] = {
   {60, 54}, //pochinki          //done
   {51, 60} //sosnovkaBase       //done
 };
-
-
 
 void setup() {
   Serial.begin(19200);
@@ -87,9 +84,6 @@ void setup() {
   delay(musicDelay);
   tone(piezoPin, notes[4]);
   noTone(piezoPin);
-
-  
- 
 }
 
 unsigned char buffer[64]; // buffer array for data recieve over serial port
@@ -132,8 +126,6 @@ void buttonStateLogger() {
       button1State = reading1;
 
       if (button1State == LOW) {
-
-        // transmitMessage(buildPositionString(greenSpawns[0][0], greenSpawns[0][1]));
         // transmitMessage(buildPositionString(49, 54));
         transmitMessage(pickRandomPosition("green"));
       }
@@ -144,9 +136,7 @@ void buttonStateLogger() {
       button2State = reading2;
 
       if (button2State == LOW) {
-        // transmitMessage(buildPositionString(48, 54));
         transmitMessage(pickRandomPosition("red"));
-        // transmitMessage(buildPositionString(greenSpawns[1][0], greenSpawns[1][1]));
       }
     }
   }
@@ -155,7 +145,6 @@ void buttonStateLogger() {
       button3State = reading3;
 
       if (button3State == LOW) {
-        // transmitMessage(buildPositionString(49, 53));
         transmitMessage(pickRandomPosition("black"));
       }
     }
@@ -172,10 +161,6 @@ String buildPositionString(int xPos, int yPos){
 
   return String("x" + mappedX + "y" + mappedY);
 }
-
-// String pickPosition(int spawnsArray, int place) {
-//   return buildPositionString(spawnsArray[place][0], spawnsArray[place][1]);
-// }
 
 String pickRandomPosition(String color){
   int clock = millis();
@@ -195,6 +180,4 @@ String pickRandomPosition(String color){
     int placeIndex = random(blackSpawnsLength);
     return buildPositionString(blackSpawns[placeIndex][0], blackSpawns[placeIndex][1]);
   }
-
-  // return buildPositionString(random(0, 100), random(0, 100));
 }
