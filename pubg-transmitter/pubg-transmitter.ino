@@ -8,11 +8,10 @@ const int button2Pin = 2;
 const int button3Pin = 3;
 
 //544 - 2400
-const int xMin = 1200; //tweak these values
-const int xMax = 1900; //tweak these values
-const int yMin = 1200; //tweak these values
-const int yMax = 2000; //tweak these values
-const int delayTime = 1000; //tweak these values
+const int xMin = 2400; //tweak these values, done
+const int xMax = 544; //tweak these values
+const int yMin = 2400; //tweak these values, done
+const int yMax = 544; //tweak these values
 
 const int notes[] = {262, 294, 330, 349};
 const int musicDelay = 80;
@@ -34,38 +33,38 @@ unsigned long clock = 0; // use for RNG
 
 const int greenSpawnsLength = 6;
 const int greenSpawns[6][2] = {
-  {40, 60}, //ruins
-  {50, 55}, //pochinkiSchool
-  {55, 45}, //pochinkiFarm
-  {85, 50}, //myltaPrison
-  {80, 80}, //stalber
-  {15, 15} //quarry
+  {60, 48}, //ruins             //done
+  {51, 51}, //pochinkiSchool    //done
+  {48, 54}, //pochinkiFarm      //done
+  {16, 45}, //myltaPrison       //done
+  {21, 22}, //stalber           //done
+  {80, 52}  //quarry            //done
 };
 
 const int redSpawnsLength = 12;
 const int redSpawns[12][2] = {
-  {10, 90}, //zharki
-  {40, 85}, //shootingRange
-  {50, 90}, //severny
-  {50, 70}, //rozhok
-  {80, 50}, //mansion
-  {90, 45}, //lipovka
-  {95, 35}, //myltaPower
-  {80, 30}, //mylta
-  {20, 20}, //ferryPier
-  {10, 15}, //pirmorsk
-  {85, 15}, //novorepnoye
-  {70, 10}  //sosnovkaBaseMountain
+  {80, 22}, //zharki          //done
+  {60, 33}, //shootingRange   //DONE
+  {50, 26}, //severny         //done
+  {51 ,46}, //rozhok          //done
+  {17, 38}, //mansion         //done
+  {10, 35}, //lipovka         //done
+  {10, 40}, //myltaPower      //done
+  {19, 49}, //mylta           //done
+  {75, 56}, //ferryPier       //DONE
+  {82, 53}, //pirmorsk        //done
+  {18, 53}, //novorepnoye     //done
+  {26, 56}  //sosnovkaBaseMountain //done
 };
 
 const int blackSpawnsLength = 6;
 const int blackSpawns[6][2] = {
-  {20, 80}, //georgopol
-  {50, 55}, //school
-  {75, 75}, //yasnayaPolyana
-  {80, 50}, //prison
-  {40, 50}, //pochinki
-  {50, 10} //sosnovkaBase
+  {76, 37}, //georgopol         //done
+  {48, 49}, //school            //done
+  {25, 36}, //yasnayaPolyana    //done
+  {16, 42}, //prison            //done
+  {60, 54}, //pochinki          //done
+  {51, 60} //sosnovkaBase       //done
 };
 
 
@@ -133,11 +132,10 @@ void buttonStateLogger() {
       button1State = reading1;
 
       if (button1State == LOW) {
-        
-        // Serial.println(buildPositionString(redSpawns[1][0], redSpawns[1][1]));
-        Serial.print(redSpawns[1][0]);
-        Serial.print(", ");
-        Serial.println(redSpawns[1][1]);
+
+        // transmitMessage(buildPositionString(greenSpawns[0][0], greenSpawns[0][1]));
+        // transmitMessage(buildPositionString(49, 54));
+        transmitMessage(pickRandomPosition("green"));
       }
     }
   }
@@ -146,9 +144,9 @@ void buttonStateLogger() {
       button2State = reading2;
 
       if (button2State == LOW) {
-        transmitMessage(buildPositionString(50, 50));
-        Serial.println("button2");
-        // Serial.println(buildPositionString(50, 50));
+        // transmitMessage(buildPositionString(48, 54));
+        transmitMessage(pickRandomPosition("red"));
+        // transmitMessage(buildPositionString(greenSpawns[1][0], greenSpawns[1][1]));
       }
     }
   }
@@ -157,8 +155,8 @@ void buttonStateLogger() {
       button3State = reading3;
 
       if (button3State == LOW) {
+        // transmitMessage(buildPositionString(49, 53));
         transmitMessage(pickRandomPosition("black"));
-        Serial.println(pickRandomPosition("black"));
       }
     }
   }
